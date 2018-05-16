@@ -2,12 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const randomstring = require('randomstring')
-const bodyParser = require("body-parser");
-
-
-DB_HOST = localhost
-DB_USER = root
-DB_PASS = s1mpl3
+var bodyParser = require("body-parser");
 
 
 
@@ -19,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 
 app.get('/',(req,res)=>{
-  const host = (req.get('host'))
+  const host = req.get('host')
   res.render('index.ejs', {host, urls});
 })
 
@@ -30,8 +25,8 @@ const urls = [
   }
 ]
 app.get('/new', (req, res) => {
-  if(req.query.secret===process.env.SECRET){
-    res.render('new.ejs')
+  if(req.query.secret=== process.env.SECRET){
+    res.render('new.ejs', {secret:process.env.SECRET})
   }else{
     res.status(403)
     res.send('403 Forbidden')
@@ -40,10 +35,15 @@ app.get('/new', (req, res) => {
 })
 
 app.get('/new',(req,res)=>{
-  const urlItem = {
-    longUrl: req.body.longUrl,
-    slug: randomstring.generate(8)
-}
+  if(req.body.secret===process.env.SECRET){
+    const urlItem = {
+      longUrl: req.body.longUrl,
+      slug: randomstring.generate(8)
+    }
+  }else{
+    res.status(403);
+    res.send("403 Forbidden");
+  }
 urls.push(urlItem)
 res.redirect('/')
 })
