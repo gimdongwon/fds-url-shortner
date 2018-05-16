@@ -8,6 +8,18 @@
 </head>
 <body>
   <h1>URL Shortener</h1>
+  <table>
+  <tr>
+    <th>긴 URL</th>
+    <th>짧은 URL</th>
+  </tr>
+  <% urls.forEach(urlItem => { %>
+  <tr>
+    <td><%= urlItem.longUrl %></td>
+    <td><a href="//<%= host%>/<%= urlItem.slug%>"><%= urlItem.slug %></a></td>
+  </tr>
+  <%})%>
+  </table>
 </body>
 </html>
 
